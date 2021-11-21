@@ -15,7 +15,8 @@
 	<url>https://github.com/twentyfirst-org/rpglepp</url>
 	<inceptionYear>2021</inceptionYear>
 	<organization>
-		<name>RPGLEPreprocessor</name>
+		<name>TwentyFirst</name>
+		<url>https://github.com/twentyfirst-org</url>
 	</organization>	
 	<developers>
 		<developer>
@@ -119,6 +120,7 @@
 					<skipTests>false</skipTests>
 				</configuration>
 			</plugin>
+			<!--
 			<plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
@@ -135,6 +137,7 @@
 					<finalName>uber-${project.artifactId}-${project.version}</finalName>
                 </configuration>
             </plugin>
+			-->
 		</plugins>
 	</build>
 	
@@ -144,8 +147,8 @@
 			<activation><activeByDefault>true</activeByDefault></activation>
 			<repositories>
 				<repository>
-					<id>snapshots-repo</id>
-					<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+					<id>rpglepp</id>
+					<url>https://maven.pkg.github.com/twentyfirst-org/rpglepp</url>
 					<releases><enabled>false</enabled></releases>
 					<snapshots><enabled>true</enabled></snapshots>
 				</repository>
@@ -182,6 +185,7 @@
 					</execution>
 				</executions>
 			</plugin>
+			<!--
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-gpg-plugin</artifactId>
@@ -238,24 +242,23 @@
 					<autoReleaseAfterClose>false</autoReleaseAfterClose>
 				</configuration>
 			</plugin>
+			-->
 			<!-- end deployment -->
 			     </plugins>
 		      </build>
 	       </profile>
 	</profiles>
 
-	<!-- Sonatype: mvn clean package -P deploy -->
-	<!-- Sonatype: mvn verify gpg:sign -DskipTests -P deploy -Dgpg.keyname=com.github.twentyfirst.rpglepp -->
-	<!-- Sonatype: mvn deploy -DskipTests -P deploy -->
-	<!-- Sonatype: mvn nexus-staging:release -DskipTests -->
 	<distributionManagement>
 		<snapshotRepository>
-			<id>ossrh</id>
-			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+			<id>rpglepp</id>
+			<name>GitHub Twenty First Apache Maven Packages</name>
+			<url>https://maven.pkg.github.com/twentyfirst-org/rpglepp</url>
 		</snapshotRepository>
 		<repository>
-			<id>ossrh</id>
-			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+			<id>rpglepp</id>
+			<name>GitHub Twenty First Apache Maven Packages</name>
+			<url>https://maven.pkg.github.com/twentyfirst-org/rpglepp</url>
 		</repository>
 	</distributionManagement>
 </project>
