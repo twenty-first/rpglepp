@@ -1,4 +1,4 @@
-package io.github.nmusatti.rpglepreprocessor.rpglepp;
+package io.github.twentyfirst.rpglepp.parser;
 
 import static org.junit.Assert.assertTrue;
 
