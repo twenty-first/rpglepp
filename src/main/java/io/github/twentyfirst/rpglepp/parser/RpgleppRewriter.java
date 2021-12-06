@@ -1,36 +1,49 @@
 package io.github.twentyfirst.rpglepp.parser;
 
+import java.util.Set;
+
 import org.antlr.v4.runtime.TokenStream;
 import org.antlr.v4.runtime.TokenStreamRewriter;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import io.github.twentyfirst.rpglepp.RpgleppParserBaseListener;
 import io.github.twentyfirst.rpglepp.RpgleppParser.CommentContext;
 import io.github.twentyfirst.rpglepp.RpgleppParser.ConditionContext;
 import io.github.twentyfirst.rpglepp.RpgleppParser.CopyContext;
+import io.github.twentyfirst.rpglepp.RpgleppParser.DefineContext;
 import io.github.twentyfirst.rpglepp.RpgleppParser.Else_Context;
 import io.github.twentyfirst.rpglepp.RpgleppParser.ElseifContext;
 import io.github.twentyfirst.rpglepp.RpgleppParser.EndifContext;
+import io.github.twentyfirst.rpglepp.RpgleppParser.EofContext;
+import io.github.twentyfirst.rpglepp.RpgleppParser.EofDirContext;
 import io.github.twentyfirst.rpglepp.RpgleppParser.EolContext;
 import io.github.twentyfirst.rpglepp.RpgleppParser.If_Context;
 import io.github.twentyfirst.rpglepp.RpgleppParser.InstructionContext;
 import io.github.twentyfirst.rpglepp.RpgleppParser.LineContext;
 import io.github.twentyfirst.rpglepp.RpgleppParser.PrefixContext;
+import io.github.twentyfirst.rpglepp.RpgleppParser.UndefineContext;
+import io.github.twentyfirst.rpglepp.RpgleppParserBaseListener;
 import io.github.twentyfirst.rpglepp.api.SourceFile;
 
 public class RpgleppRewriter extends RpgleppParserBaseListener {
 
+	private Logger log = LoggerFactory.getLogger(getClass());
+	
     private TokenStreamRewriter rewriter;
     private RpgleppPreprocessor preprocessor;
+    private Set<String> defines;
     
     private String copyText = null;
     private boolean hasLineNumber = false;
     private String pad = null;
     private boolean deleteLine = false;
 
-    public RpgleppRewriter(TokenStream tokenStream, RpgleppPreprocessor preprocessor) {
+    public RpgleppRewriter(TokenStream tokenStream, Set<String> defines, 
+    		RpgleppPreprocessor preprocessor) {
         rewriter = new TokenStreamRewriter(tokenStream);
         this.preprocessor = preprocessor;
+        this.defines = defines;
     }
 
     @Override
@@ -67,7 +80,7 @@ public class RpgleppRewriter extends RpgleppParserBaseListener {
     public void exitCopy(CopyContext ctx) {
         RpgleppPreprocessor pp = preprocessor.make();
         SourceFile copyBook = pp.getReader().read(ctx.member().getText());
-        copyText = pp.preprocess(copyBook);
+        copyText = pp.preprocess(copyBook, defines);
     }
 
     @Override
@@ -88,6 +101,38 @@ public class RpgleppRewriter extends RpgleppParserBaseListener {
 	@Override
 	public void exitEndif(EndifContext ctx) {
     	deleteLine = true;
+	}
+
+	@Override
+	public void exitDefine(DefineContext ctx) {
+		if ( defines.contains(ctx.NAME().getText())) {
+			log.warn("Nome " + ctx.NAME().getText() + " gia' definito");
+		}
+		else {
+			defines.add(ctx.NAME().getText());
+		}
+	}
+
+	@Override
+	public void exitUndefine(UndefineContext ctx) {
+		if ( ! defines.contains(ctx.NAME().getText())) {
+			log.warn("Nome " + ctx.NAME().getText() + " non definito");
+		}
+		else {
+			defines.remove(ctx.NAME().getText());
+		}
+	}
+
+	@Override
+	public void exitEofDir(EofDirContext ctx) {
+		// TODO Auto-generated method stub
+		super.exitEofDir(ctx);
+	}
+
+	@Override
+	public void exitEof(EofContext ctx) {
+		// TODO Auto-generated method stub
+		super.exitEof(ctx);
 	}
 
 	@Override

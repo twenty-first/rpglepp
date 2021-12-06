@@ -1,6 +1,7 @@
 package io.github.twentyfirst.rpglepp.parser;
 
 import java.util.List;
+import java.util.Set;
 
 import org.antlr.v4.runtime.ANTLRErrorListener;
 import org.antlr.v4.runtime.ANTLRInputStream;
@@ -37,7 +38,7 @@ public class RpgleppPreprocessor {
         this.reader = reader;
     }
     
-    public String preprocess(SourceFile copyBook) {
+    public String preprocess(SourceFile copyBook, Set<String> defines) {
         ANTLRInputStream inputStream = new ANTLRInputStream(copyBook.getText());
 		RpgleppLexer lexer = new RpgleppLexer(inputStream);
 		if ( listener != null ) {
@@ -46,7 +47,7 @@ public class RpgleppPreprocessor {
 		}
 		RpgleppTokenSource source = new RpgleppTokenSource(lexer);
 		TokenStream tokenStream = new CommonTokenStream(source);
-        RpgleppRewriter rewriter = new RpgleppRewriter(tokenStream, this);
+        RpgleppRewriter rewriter = new RpgleppRewriter(tokenStream, defines, this);
 		RpgleppParser parser = new RpgleppParser(tokenStream);
 		if ( listener != null ) {
 			parser.removeErrorListeners();

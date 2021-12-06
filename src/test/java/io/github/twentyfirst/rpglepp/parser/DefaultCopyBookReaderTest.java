@@ -8,7 +8,6 @@ import java.util.Arrays;
 import org.junit.Test;
 
 import io.github.twentyfirst.rpglepp.api.SourceFile;
-import io.github.twentyfirst.rpglepp.parser.DefaultCopyBookReader;
 
 public class DefaultCopyBookReaderTest {
     
