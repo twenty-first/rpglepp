@@ -1,4 +1,4 @@
-package io.github.twentyfirst.rpglepp.rpglepp;
+package io.github.twentyfirst.rpglepp.parser;
 
 import java.util.List;
 

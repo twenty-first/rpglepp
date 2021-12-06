@@ -11,8 +11,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 
 import io.github.twentyfirst.rpglepp.api.SourceFile;
-import io.github.twentyfirst.rpglepp.rpglepp.DefaultCopyBookReader;
-import io.github.twentyfirst.rpglepp.rpglepp.RpgleppPreprocessor;
+import io.github.twentyfirst.rpglepp.parser.DefaultCopyBookReader;
+import io.github.twentyfirst.rpglepp.parser.RpgleppPreprocessor;
 
 public class RpgleppPreprocessorTest {
 

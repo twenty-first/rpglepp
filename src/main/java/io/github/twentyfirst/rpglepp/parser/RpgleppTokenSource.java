@@ -1,4 +1,4 @@
-package io.github.twentyfirst.rpglepp.rpglepp;
+package io.github.twentyfirst.rpglepp.parser;
 
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.Lexer;
