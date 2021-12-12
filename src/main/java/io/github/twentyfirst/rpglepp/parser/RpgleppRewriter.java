@@ -33,6 +33,8 @@ import io.github.twentyfirst.rpglepp.api.SourceFile;
 
 public class RpgleppRewriter extends RpgleppParserBaseListener {
 
+	enum State { ACTIVE, CONDITION, EOF }
+	
 	private Logger log = LoggerFactory.getLogger(getClass());
 	
     private TokenStreamRewriter rewriter;
@@ -42,12 +44,13 @@ public class RpgleppRewriter extends RpgleppParserBaseListener {
     private Set<String> defines;
     private Deque<Condition> conditions = new ArrayDeque<Condition>();
     private Token inactiveStart;
-    
+    private State state = State.ACTIVE;
     private String copyText = null;
     private boolean hasLineNumber = false;
     private String pad = null;
-    private boolean deleteLine = false;
-    private Token eofDir;
+    private boolean deleteCurrentLine = false;
+    private Token currentLineStart;
+    private Token previousLineEnd;
 
     public RpgleppRewriter(TokenStream tokenStream, Set<String> defines, 
     		RpgleppPreprocessor preprocessor, RpgleppErrorListener listener) {
@@ -59,7 +62,7 @@ public class RpgleppRewriter extends RpgleppParserBaseListener {
 
     @Override
 	public void exitPrefix(PrefixContext ctx) {
-    	if ( inactiveStart == null ) {
+    	if ( state == State.ACTIVE ) {
         	if ( ctx.LINE_NUMBER() != null ) {
         		rewriter.delete(ctx.LINE_NUMBER().getSymbol());
         		hasLineNumber = true;
@@ -73,9 +76,10 @@ public class RpgleppRewriter extends RpgleppParserBaseListener {
 
 	@Override
 	public void exitInstruction(InstructionContext ctx) {
-    	if ( inactiveStart == null ) {
+    	if ( state == State.ACTIVE ) {
     		if ( ctx.BAD_INSTRUCTION() != null ) {
-    			String repl = StringUtils.replaceChars(ctx.BAD_INSTRUCTION().getText(), "\u00A3\u00A7\u00C2", "LSA");
+    			String repl = StringUtils.replaceChars(ctx.BAD_INSTRUCTION().getText(), 
+    					"\u00A3\u00A7\u00C2", "LSA");
     			rewriter.replace(ctx.BAD_INSTRUCTION().getSymbol(), repl);
     		}
     	}
@@ -83,7 +87,7 @@ public class RpgleppRewriter extends RpgleppParserBaseListener {
 
 	@Override
 	public void exitComment(CommentContext ctx) {
-    	if ( inactiveStart == null ) {
+    	if ( state == State.ACTIVE ) {
     		if ( ctx.BAD_COMMENT() != null ) {
     			String repl = StringUtils.replaceEach(ctx.BAD_COMMENT().getText(), 
     					new String[] { "\u00A3", "\u00A7" }, 
@@ -95,7 +99,7 @@ public class RpgleppRewriter extends RpgleppParserBaseListener {
 
 	@Override
     public void exitCopy(CopyContext ctx) {
-    	if ( inactiveStart == null ) {
+    	if ( state == State.ACTIVE ) {
             RpgleppPreprocessor pp = preprocessor.make();
             SourceFile copyBook = pp.getReader().read(ctx.member().getText());
             copyText = pp.preprocess(copyBook, defines);
@@ -104,129 +108,152 @@ public class RpgleppRewriter extends RpgleppParserBaseListener {
 
     @Override
 	public void exitIf_(If_Context ctx) {
-    	conditions.push(new Condition(ctx, defines, 
-    			conditions.size() == 0 || conditions.getFirst().isActive()));
-    	if ( ! conditions.getFirst().isActive() ) {
-    		if ( inactiveStart == null ) {
-    			inactiveStart = ctx.getStart();
-    		}
+    	if ( state != State.EOF ) {
+        	conditions.push(new Condition(ctx, defines, 
+        			conditions.size() == 0 || conditions.getFirst().isActive()));
+        	if ( ! conditions.getFirst().isActive() ) {
+        		if ( state == State.ACTIVE ) {
+        			state = State.CONDITION;
+        			inactiveStart = currentLineStart;
+        		}
+        	}
+        	else {
+            	deleteCurrentLine = true;    		
+        	}
     	}
-    	deleteLine = true;    		
 	}
 
 	@Override
 	public void exitElseif(ElseifContext ctx) {
-		if ( conditions.isEmpty() ) {
-			listener.preprocessingError(ctx.getStart().getLine(), 
-					ctx.getStart().getCharPositionInLine(), "/ELSEIF directive without /IF");
-		}
-		else {
-			conditions.pop();
-	    	conditions.push(new Condition(ctx, defines, 
-	    			conditions.size() == 0 || conditions.getFirst().isActive()));
-	    	if ( conditions.getFirst().isActive() ) {
-	    		if ( inactiveStart != null ) {
-	    			rewriter.delete(inactiveStart, ctx.getStop());
-	    			inactiveStart = null;
-	    		}
-	    	}
-	    	else {
-	    		if ( inactiveStart == null ) {
-	    			inactiveStart = ctx.getStart();
-	    		}
-	    	}
-		}
-    	deleteLine = true;
+    	if ( state != State.EOF ) {
+    		if ( conditions.isEmpty() ) {
+    			listener.preprocessingError(ctx.getStart().getLine(), 
+    					ctx.getStart().getCharPositionInLine(), "/ELSEIF directive without /IF");
+    		}
+    		else {
+    			conditions.pop();
+    	    	conditions.push(new Condition(ctx, defines, 
+    	    			conditions.size() == 0 || conditions.getFirst().isActive()));
+    	    	if ( conditions.getFirst().isActive() ) {
+    	    		if ( state == State.CONDITION ) {
+    	    			rewriter.delete(inactiveStart, previousLineEnd);
+    	    			inactiveStart = null;
+    	    			state = State.ACTIVE;
+    	    		}
+    	        	deleteCurrentLine = true;
+    	    	}
+    	    	else {
+    	    		if ( state == State.ACTIVE ) {
+    	    			inactiveStart = currentLineStart;
+    	    			state = State.CONDITION;
+    	    		}
+    	    	}
+    		}
+    	}
 	}
 
 	@Override
 	public void exitElse_(Else_Context ctx) {
-		if ( conditions.isEmpty() ) {
-			listener.preprocessingError(ctx.getStart().getLine(), 
-					ctx.getStart().getCharPositionInLine(), "/ELSE directive without /IF");
-		}
-		else {
-			Condition prev = conditions.pop();
-			conditions.push(new Condition(prev.getName(), prev.getKind().flip(),
-					( conditions.size() == 0 || conditions.getFirst().isActive() ) && ! prev.isActive()));
-	    	if ( conditions.getFirst().isActive() ) {
-	    		if ( inactiveStart != null ) {
-	    			rewriter.delete(inactiveStart, ctx.getStop());
-	    			inactiveStart = null;
-	    		}
-	    	}
-	    	else {
-	    		if ( inactiveStart == null ) {
-	    			inactiveStart = ctx.getStart();
-	    		}
-	    	}
-		}
-    	deleteLine = true;
+    	if ( state != State.EOF ) {
+    		if ( conditions.isEmpty() ) {
+    			listener.preprocessingError(ctx.getStart().getLine(), 
+    					ctx.getStart().getCharPositionInLine(), "/ELSE directive without /IF");
+    		}
+    		else {
+    			Condition prev = conditions.pop();
+    			conditions.push(new Condition(prev.getName(), prev.getKind().flip(),
+    					( conditions.size() == 0 || conditions.getFirst().isActive() ) && 
+    							! prev.isActive()));
+    	    	if ( conditions.getFirst().isActive() ) {
+    	    		if ( state == State.CONDITION ) {
+    	    			rewriter.delete(inactiveStart, previousLineEnd);
+    	    			inactiveStart = null;
+    	    			state = State.ACTIVE;
+    	    		}
+    	        	deleteCurrentLine = true;
+    	    	}
+    	    	else {
+    	    		if ( state == State.ACTIVE ) {
+    	    			inactiveStart = currentLineStart;
+    	    			state = State.CONDITION;
+    	    		}
+    	    	}
+    		}
+    	}
 	}
 
 	@Override
 	public void exitEndif(EndifContext ctx) {
-		if ( conditions.isEmpty() ) {
-			listener.preprocessingError(ctx.getStart().getLine(), 
-					ctx.getStart().getCharPositionInLine(), "/ENDIF directive without /IF");
-		}
-		else {
-			conditions.pop();
-	    	if ( conditions.isEmpty() || conditions.getFirst().isActive() ) {
-	    		if ( inactiveStart != null ) {
-	    			rewriter.delete(inactiveStart, ctx.getStop());
-	    			inactiveStart = null;
-	    		}
-	    	}
-		}
-    	deleteLine = true;
+    	if ( state != State.EOF ) {
+    		if ( conditions.isEmpty() ) {
+    			listener.preprocessingError(ctx.getStart().getLine(), 
+    					ctx.getStart().getCharPositionInLine(), "/ENDIF directive without /IF");
+    		}
+    		else {
+    			conditions.pop();
+    	    	if ( conditions.isEmpty() || conditions.getFirst().isActive() ) {
+    	    		if ( state == State.CONDITION ) {
+    	    			rewriter.delete(inactiveStart, previousLineEnd);
+    	    			inactiveStart = null;
+    	    			state = State.ACTIVE;
+    	    		}
+    	    	}
+            	deleteCurrentLine = true;
+    		}
+    	}
 	}
 
 	@Override
 	public void exitDefine(DefineContext ctx) {
-    	if ( inactiveStart == null ) {
+    	if ( state == State.ACTIVE ) {
     		if ( defines.contains(ctx.NAME().getText())) {
     			log.warn("Nome " + ctx.NAME().getText() + " gia' definito");
     		}
     		else {
     			defines.add(ctx.NAME().getText());
     		}
+        	deleteCurrentLine = true;
     	}
-    	deleteLine = true;
 	}
 
 	@Override
 	public void exitUndefine(UndefineContext ctx) {
-    	if ( inactiveStart == null ) {
+    	if ( state == State.ACTIVE ) {
     		if ( ! defines.contains(ctx.NAME().getText())) {
     			log.warn("Nome " + ctx.NAME().getText() + " non definito");
     		}
     		else {
     			defines.remove(ctx.NAME().getText());
     		}
+        	deleteCurrentLine = true;
     	}
-    	deleteLine = true;
 	}
 
 	@Override
 	public void exitEofDir(EofDirContext ctx) {
-    	if ( inactiveStart == null ) {
-    		if ( eofDir == null ) {
-    			eofDir = ctx.getStart();
+    	if ( state != State.EOF ) {
+    		if ( inactiveStart == null ) {
+    			inactiveStart = currentLineStart;
+    			state = State.EOF;
     		}
     	}
 	}
 
 	@Override
 	public void exitEof(EofContext ctx) {
-		if ( eofDir != null ) {
-			rewriter.delete(eofDir, ctx.getStop());
+		if ( state == State.CONDITION ) {
+			listener.preprocessingError(ctx.getStart().getLine(), 
+					ctx.getStart().getCharPositionInLine(), 
+					"/IF or /ELSEIF directive without /ENDIF");			
+		}
+		else if ( state == State.EOF ) {
+			rewriter.delete(inactiveStart, ctx.getStop());
 		}
 	}
 
 	@Override
 	public void exitCondition(ConditionContext ctx) {
-    	if ( inactiveStart == null ) {
+    	if ( state == State.ACTIVE ) {
         	if ( ctx.NAME().getText().indexOf('*') != -1 ) {
         		String repl = ctx.NAME().getText().replace("*", "");
         		rewriter.replace(ctx.NAME().getSymbol(), repl);
@@ -234,13 +261,19 @@ public class RpgleppRewriter extends RpgleppParserBaseListener {
     	}
 	}
 
+
+	@Override
+    public void enterLine(LineContext ctx) {
+		currentLineStart = ctx.getStart();
+	}
+
 	@Override
     public void exitLine(LineContext ctx) {
-		if ( deleteLine ) {
+		if ( deleteCurrentLine ) {
 			rewriter.delete(ctx.getStart(), ctx.getStop());
-			deleteLine = false;
+			deleteCurrentLine = false;
 		}
-		else {
+		else if ( state == State.ACTIVE ) {
 	        if ( copyText != null ) {
 	            rewriter.replace(ctx.start, ctx.stop, copyText);
 	            copyText = null;
@@ -263,6 +296,11 @@ public class RpgleppRewriter extends RpgleppParserBaseListener {
 	public void enterEol(EolContext ctx) {
 		rewriter.insertBefore(ctx.getStop(), pad != null ? pad : StringUtils.rightPad("", 80));
 		pad = null;
+	}
+    
+	@Override
+	public void exitEol(EolContext ctx) {
+    	previousLineEnd = ctx.getStop();
 	}
 	
 	public String getText() {
