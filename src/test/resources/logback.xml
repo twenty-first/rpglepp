@@ -5,7 +5,7 @@
             <pattern>%d{ISO8601} %-5p [%-10t] %-25c - %m%n</pattern>
         </encoder>
     </appender>
-    <logger name="io.github.nmusatti.rpglepreprocessor" level="INFO" />
+    <logger name="io.github.twentyfirst.rpglepp" level="INFO" />
     <root level="INFO">
         <appender-ref ref="CONSOLE" />
     </root>
