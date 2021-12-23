@@ -14,4 +14,10 @@ public class FilesTest {
     	String s = Files.readFile("logback.xml", Arrays.asList("classpath:"));
     	assertTrue(s.indexOf("twentyfirst") != -1);
     }
+
+    @Test
+    public void readCaseInsensitiveTest() throws IOException {
+    	String s = Files.readFile("CopyBook.rpglecopy", Arrays.asList("test/copy"));
+    	assertTrue(s.indexOf("empty") != -1);
+    }
 }
