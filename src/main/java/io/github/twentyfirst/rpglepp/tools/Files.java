@@ -83,6 +83,9 @@ public class Files {
 						return read.toString();
 					}
 				}
+				catch ( Exception e ) {
+					log.warn("Error reading file: " + e.getMessage());
+				}
 			}
 		}
 		throw new FileNotFoundException("File " + name + " not found");
