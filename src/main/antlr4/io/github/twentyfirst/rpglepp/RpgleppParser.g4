@@ -2,7 +2,7 @@ parser grammar RpgleppParser;
 
 options { tokenVocab = RpgleppLexer; }
 
-sourceFile : ( FULLY_FREE_DIR EOL )? line ( eol line? )* endSource? eof;
+sourceFile : ( FULLY_FREE_DIR? EOL+ )? line ( eol line? )* endSource? eof;
 
 line :	( prefix
         | prefix? statement
@@ -18,7 +18,7 @@ statement : ( directive
             ;
 
 prefix		:   ( LINE_NUMBER END_SOURCE_DIR?
-                | LINE_NUMBER? ( END_SOURCE_DIR | STANDARD_PREFIX )
+                | LINE_NUMBER? ( END_SOURCE_DIR | STANDARD_PREFIX | BAD_PREFIX )
                 ) 
                 ;
 

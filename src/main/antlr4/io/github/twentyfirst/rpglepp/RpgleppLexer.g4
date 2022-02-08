@@ -3,6 +3,7 @@ lexer grammar RpgleppLexer;
 tokens { 
     BAD_COMMENT,
     BAD_INSTRUCTION,
+    BAD_PREFIX,
     COMMENT,
     EOL,
     EMPTY,
@@ -25,6 +26,8 @@ PFX_LINE_NUMBER     : LNUM_F -> type(LINE_NUMBER) ;
 
 PFX_STANDARD_PREFIX : PREF_F -> type(STANDARD_PREFIX), pushMode(Fixed) ;
 
+PFX_BAD_PREFIX : BAD_PREF_F -> type(BAD_PREFIX), pushMode(Fixed) ;
+
 PFX_EOL         : PART_PREFIX_F? EOL_F -> type(EOL) ;
 
 fragment PART_PREFIX_F : ~[\r\n*] ~[\r\n*]? ANY_F? ANY_F? ;
@@ -33,8 +36,9 @@ fragment PART_PREFIX_F : ~[\r\n*] ~[\r\n*]? ANY_F? ANY_F? ;
 
 fragment LNUM_F     : [0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9] ;
 fragment PREF_F     : ANY_F ANY_F ANY_F ANY_F ANY_F ;
+fragment BAD_PREF_F : BAD_F BAD_F BAD_F BAD_F BAD_F ;
 fragment EOL_F      : '\r'? '\n' ;
-fragment ANY_F      : ~[\r\n\u00A3\u00A7\u00C2] ;
+fragment ANY_F      : ~[\r\n\u0082\u00A3\u00A7\u00C2] ;
 fragment BAD_F      : ~[\r\n] ;
 fragment SPACE_F    : [ \t] ;
 fragment SPEC_F		: [CcDdFfHhIiOoPp] ;
@@ -50,7 +54,7 @@ FX_EXEC_SQL : [Cc] '/' EXEC_SQL_F -> type(EXEC_SQL), popMode, pushMode(SqlFixed)
 
 FX_COMMENT : ( ANY_F '*' | SPACE_F* '//' ) ANY_F* -> type(COMMENT);
 
-FX_BAD_COMMENT : ( ANY_F '*' | SPACE_F* '//' ) BAD_F+ -> type(BAD_COMMENT);
+FX_BAD_COMMENT : ( BAD_F BAD_F? '*' | SPACE_F* '//' ) BAD_F* -> type(BAD_COMMENT);
 
 FX_INSTRUCTION : SPEC_F ~[/*\r\n] ANY_F+ -> type(INSTRUCTION);
 
@@ -142,6 +146,8 @@ mode SqlPrefix;
 SQX_LINE_NUMBER     : LNUM_F -> type(LINE_NUMBER) ;
 
 SQX_STANDARD_PREFIX : PREF_F -> popMode, type(STANDARD_PREFIX) ;
+
+SQX_BAD_PREFIX : BAD_PREF_F -> popMode, type(BAD_PREFIX) ;
 
 
 mode SqlFree;

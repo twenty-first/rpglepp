@@ -67,6 +67,11 @@ public class RpgleppRewriter extends RpgleppParserBaseListener {
         		rewriter.delete(ctx.LINE_NUMBER().getSymbol());
         		hasLineNumber = true;
         	}
+        	if ( ctx.BAD_PREFIX() != null ) {
+    			String repl = StringUtils.replaceChars(ctx.BAD_PREFIX().getText(), 
+    					"\u00A3\u00A7\u00C2", "LSA");
+    			rewriter.replace(ctx.BAD_PREFIX().getSymbol(), repl);
+        	}
         	if ( ctx.END_SOURCE_DIR() != null && ctx.END_SOURCE_DIR().getText().length() < 6 ) {
         		String repl = StringUtils.rightPad(ctx.END_SOURCE_DIR().getText(), 6);
         		rewriter.replace(ctx.END_SOURCE_DIR().getSymbol(), repl);
@@ -78,8 +83,10 @@ public class RpgleppRewriter extends RpgleppParserBaseListener {
 	public void exitInstruction(InstructionContext ctx) {
     	if ( state == State.ACTIVE ) {
     		if ( ctx.BAD_INSTRUCTION() != null ) {
+//    			String repl = StringUtils.replaceChars(ctx.BAD_INSTRUCTION().getText(), 
+//    					"\u00A3\u00A7\u00C2", "LSA");
     			String repl = StringUtils.replaceChars(ctx.BAD_INSTRUCTION().getText(), 
-    					"\u00A3\u00A7\u00C2", "LSA");
+    					"\u00A3\u00A7\u00C2", "   ");
     			rewriter.replace(ctx.BAD_INSTRUCTION().getSymbol(), repl);
     		}
     	}
@@ -89,9 +96,15 @@ public class RpgleppRewriter extends RpgleppParserBaseListener {
 	public void exitComment(CommentContext ctx) {
     	if ( state == State.ACTIVE ) {
     		if ( ctx.BAD_COMMENT() != null ) {
-    			String repl = StringUtils.replaceEach(ctx.BAD_COMMENT().getText(), 
-    					new String[] { "\u00A3", "\u00A7" }, 
-    					new String[] { "Pound", "Para" });
+//    			String repl = StringUtils.replaceEach(ctx.BAD_COMMENT().getText(), 
+//    					new String[] { "\u00A3", "\u00A7" }, 
+//    					new String[] { "Pound", "Para" });
+    			String repl = ctx.BAD_COMMENT().getText();    				
+    			int i = repl.indexOf('*');
+    			if ( i != -1 ) {
+        			repl = " " + repl.substring(i);    				
+    			}
+    			repl = StringUtils.replaceChars(repl, "\u0082\u00A3\u00A7\u00C2", "    ");
     			rewriter.replace(ctx.BAD_COMMENT().getSymbol(), repl);
     		}
     	}
