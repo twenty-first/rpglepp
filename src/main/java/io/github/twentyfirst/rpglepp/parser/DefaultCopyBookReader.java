@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 
 import io.github.twentyfirst.rpglepp.api.CopyBookReader;
 import io.github.twentyfirst.rpglepp.api.SourceFile;
+import io.github.twentyfirst.rpglepp.exception.InvalidCopyBookException;
 import io.github.twentyfirst.rpglepp.exception.MissingCopyBookException;
 import io.github.twentyfirst.rpglepp.tools.Files;
 
@@ -26,7 +27,7 @@ public class DefaultCopyBookReader implements CopyBookReader {
     public SourceFile read(String copyBookName){
         Matcher m = NAME_PATTERN.matcher(copyBookName);
         if ( ! m.matches() || m.group(1) == null ) {
-            throw new IllegalArgumentException(copyBookName + ": invalid copybook name");
+            throw new InvalidCopyBookException(copyBookName);
         }
         String baseName = m.group(1).toUpperCase();
         for ( String ext: COPY_EXTENSIONS ) {
