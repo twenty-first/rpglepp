@@ -1,4 +1,4 @@
-package io.github.twentyfirst.rpglepp.exception;
+package it.twenfir.rpglepp.exception;
 
 public class RpgleppException extends RuntimeException {
 

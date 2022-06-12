@@ -1,10 +1,10 @@
-package io.github.twentyfirst.rpglepp.parser;
+package it.twenfir.rpglepp.parser;
 
 import java.util.Set;
 
-import io.github.twentyfirst.rpglepp.RpgleppParser.ConditionContext;
-import io.github.twentyfirst.rpglepp.RpgleppParser.ElseifContext;
-import io.github.twentyfirst.rpglepp.RpgleppParser.If_Context;
+import it.twenfir.rpglepp.RpgleppParser.ConditionContext;
+import it.twenfir.rpglepp.RpgleppParser.ElseifContext;
+import it.twenfir.rpglepp.RpgleppParser.If_Context;
 
 class Condition {
 	enum Kind {

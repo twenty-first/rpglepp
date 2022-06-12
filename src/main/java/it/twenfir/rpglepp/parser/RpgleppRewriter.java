@@ -1,4 +1,4 @@
-package io.github.twentyfirst.rpglepp.parser;
+package it.twenfir.rpglepp.parser;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -12,24 +12,24 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.github.twentyfirst.rpglepp.RpgleppParser.CommentContext;
-import io.github.twentyfirst.rpglepp.RpgleppParser.ConditionContext;
-import io.github.twentyfirst.rpglepp.RpgleppParser.CopyContext;
-import io.github.twentyfirst.rpglepp.RpgleppParser.DefineContext;
-import io.github.twentyfirst.rpglepp.RpgleppParser.Else_Context;
-import io.github.twentyfirst.rpglepp.RpgleppParser.ElseifContext;
-import io.github.twentyfirst.rpglepp.RpgleppParser.EndifContext;
-import io.github.twentyfirst.rpglepp.RpgleppParser.EofContext;
-import io.github.twentyfirst.rpglepp.RpgleppParser.EofDirContext;
-import io.github.twentyfirst.rpglepp.RpgleppParser.EolContext;
-import io.github.twentyfirst.rpglepp.RpgleppParser.If_Context;
-import io.github.twentyfirst.rpglepp.RpgleppParser.InstructionContext;
-import io.github.twentyfirst.rpglepp.RpgleppParser.LineContext;
-import io.github.twentyfirst.rpglepp.RpgleppParser.PrefixContext;
-import io.github.twentyfirst.rpglepp.RpgleppParser.UndefineContext;
-import io.github.twentyfirst.rpglepp.RpgleppParserBaseListener;
-import io.github.twentyfirst.rpglepp.api.RpgleppErrorListener;
-import io.github.twentyfirst.rpglepp.api.SourceFile;
+import it.twenfir.rpglepp.RpgleppParser.CommentContext;
+import it.twenfir.rpglepp.RpgleppParser.ConditionContext;
+import it.twenfir.rpglepp.RpgleppParser.CopyContext;
+import it.twenfir.rpglepp.RpgleppParser.DefineContext;
+import it.twenfir.rpglepp.RpgleppParser.Else_Context;
+import it.twenfir.rpglepp.RpgleppParser.ElseifContext;
+import it.twenfir.rpglepp.RpgleppParser.EndifContext;
+import it.twenfir.rpglepp.RpgleppParser.EofContext;
+import it.twenfir.rpglepp.RpgleppParser.EofDirContext;
+import it.twenfir.rpglepp.RpgleppParser.EolContext;
+import it.twenfir.rpglepp.RpgleppParser.If_Context;
+import it.twenfir.rpglepp.RpgleppParser.InstructionContext;
+import it.twenfir.rpglepp.RpgleppParser.LineContext;
+import it.twenfir.rpglepp.RpgleppParser.PrefixContext;
+import it.twenfir.rpglepp.RpgleppParser.UndefineContext;
+import it.twenfir.rpglepp.api.RpgleppErrorListener;
+import it.twenfir.rpglepp.api.SourceFile;
+import it.twenfir.rpglepp.RpgleppParserBaseListener;
 
 public class RpgleppRewriter extends RpgleppParserBaseListener {
 

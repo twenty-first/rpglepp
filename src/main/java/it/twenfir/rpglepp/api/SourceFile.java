@@ -1,4 +1,4 @@
-package io.github.twentyfirst.rpglepp.api;
+package it.twenfir.rpglepp.api;
 
 public class SourceFile {
 	

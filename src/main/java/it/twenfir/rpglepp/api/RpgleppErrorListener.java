@@ -1,4 +1,4 @@
-package io.github.twentyfirst.rpglepp.api;
+package it.twenfir.rpglepp.api;
 
 import org.antlr.v4.runtime.ANTLRErrorListener;
 

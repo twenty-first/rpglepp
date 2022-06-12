@@ -1,4 +1,4 @@
-package io.github.twentyfirst.rpglepp.api;
+package it.twenfir.rpglepp.api;
 
 public interface CopyBookReader {
     SourceFile read(String copyBookName);

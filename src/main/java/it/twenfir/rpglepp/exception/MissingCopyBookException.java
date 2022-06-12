@@ -1,6 +1,6 @@
-package io.github.twentyfirst.rpglepp.exception;
+package it.twenfir.rpglepp.exception;
 
-public class InvalidCopyBookException extends RpgleppException {
+public class MissingCopyBookException extends RpgleppException {
 
 	/**
 	 * 
@@ -9,8 +9,8 @@ public class InvalidCopyBookException extends RpgleppException {
 
 	private String fileName;
 	
-	public InvalidCopyBookException(String fileName) {
-		super("Invalid source filename: " + fileName);
+	public MissingCopyBookException(String fileName) {
+		super("Source file " + fileName + " not found");
 	}
 
 	public String getFileName() {

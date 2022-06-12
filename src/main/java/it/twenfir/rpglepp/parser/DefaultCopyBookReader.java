@@ -1,15 +1,15 @@
-package io.github.twentyfirst.rpglepp.parser;
+package it.twenfir.rpglepp.parser;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import io.github.twentyfirst.rpglepp.api.CopyBookReader;
-import io.github.twentyfirst.rpglepp.api.SourceFile;
-import io.github.twentyfirst.rpglepp.exception.InvalidCopyBookException;
-import io.github.twentyfirst.rpglepp.exception.MissingCopyBookException;
 import it.twenfir.antlr.tools.Files;
+import it.twenfir.rpglepp.api.CopyBookReader;
+import it.twenfir.rpglepp.api.SourceFile;
+import it.twenfir.rpglepp.exception.InvalidCopyBookException;
+import it.twenfir.rpglepp.exception.MissingCopyBookException;
 
 public class DefaultCopyBookReader implements CopyBookReader {
 
