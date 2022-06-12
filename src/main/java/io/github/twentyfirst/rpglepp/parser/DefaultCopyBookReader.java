@@ -9,7 +9,7 @@ import io.github.twentyfirst.rpglepp.api.CopyBookReader;
 import io.github.twentyfirst.rpglepp.api.SourceFile;
 import io.github.twentyfirst.rpglepp.exception.InvalidCopyBookException;
 import io.github.twentyfirst.rpglepp.exception.MissingCopyBookException;
-import io.github.twentyfirst.rpglepp.tools.Files;
+import it.twenfir.antlr.tools.Files;
 
 public class DefaultCopyBookReader implements CopyBookReader {
 

@@ -1,11 +1,11 @@
 package io.github.twentyfirst.rpglepp.parser;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.FileNotFoundException;
 import java.util.Arrays;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.github.twentyfirst.rpglepp.api.SourceFile;
 
