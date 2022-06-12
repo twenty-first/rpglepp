@@ -7,7 +7,7 @@
     <parent>
         <groupId>it.twenfir</groupId>
         <artifactId>twenfir-bom</artifactId>
-        <version>0.0.3</version>    
+        <version>0.0.4-SNAPSHOT</version>    
     </parent>
 
     <groupId>it.twenfir</groupId>
@@ -60,6 +60,10 @@
             <artifactId>antlr4</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
             <scope>test</scope>
@@ -73,27 +77,6 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-library</artifactId>
-            <version>1.3</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.6</version>
-        </dependency>
-        <dependency>
-            <groupId>net.sf.jt400</groupId>
-            <artifactId>jt400</artifactId>
-            <version>8.7</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>1.7.25</version>
-            </dependency>
     </dependencies>
 
     <build>
