@@ -16,7 +16,7 @@ import it.twenfir.rpglepp.api.SourceFile;
 import it.twenfir.rpglepp.parser.DefaultCopyBookReader;
 import it.twenfir.rpglepp.parser.RpgleppPreprocessor;
 
-public class RpgleppPreprocessorTest {
+public class RpgleppPreprocessorIntegrationTests {
 
 	RpgleppPreprocessor preprocessor(List<String> copyPath) {
 		return new RpgleppPreprocessor(new DefaultCopyBookReader(copyPath));

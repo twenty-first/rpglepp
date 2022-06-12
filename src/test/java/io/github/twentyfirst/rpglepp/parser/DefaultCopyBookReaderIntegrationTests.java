@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import it.twenfir.rpglepp.api.SourceFile;
 import it.twenfir.rpglepp.parser.DefaultCopyBookReader;
 
-public class DefaultCopyBookReaderTest {
+public class DefaultCopyBookReaderIntegrationTests {
     
     @Test
     public void basic() throws FileNotFoundException {
