@@ -12,7 +12,7 @@ tokens {
     EXEC_SQL,
     INSTRUCTION,
     LINE_NUMBER,
-    SPACE,
+    WHITESPACE,
     SQL_STATEMENT,
     STANDARD_PREFIX
 }
@@ -114,6 +114,7 @@ END_FREE    : [Ee][Nn][Dd]'-'[Ff][Rr][Ee][Ee] -> popMode ;
 IF          : [Ii][Ff] ;
 INCLUDE     : [Ii][Nn][Cc][Ll][Uu][Dd][Ee] ;
 NOT         : [Nn][Oo][Tt] ;
+SPACE       : [Ss][Pp][Aa][Cc][Ee] ;
 UNDEFINE    : [Uu][Nn][Dd][Ee][Ff][Ii][Nn][Ee] ;
 
 EXEC_SQL    : EXEC_SQL_F -> popMode, pushMode(SqlFree);
@@ -125,7 +126,7 @@ RPAR        : ')' ;
 SLASH       : '/' ;
 COMMA       : ',' ;
 
-DR_SPACE    : SPACE_F -> type(SPACE) ;
+DR_SPACE    : SPACE_F -> type(WHITESPACE) ;
 DR_EOL      : EOL_F -> type(EOL), popMode ;
 
 fragment NAME_START : [A-Za-z$#@*] ;

@@ -30,32 +30,35 @@ directive : ( copy
             | else_
             | endif
             | eofDir
+            | space
             | eject
             | free
             | end_free
             )
-            ( SPACE+ COMMENT? )?
+            ( WHITESPACE+ COMMENT? )?
             ;
 
-copy		: ( COPY | INCLUDE ) SPACE member SPACE* ;
+copy		: ( COPY | INCLUDE ) WHITESPACE member WHITESPACE* ;
 
 member      : ( ( NAME SLASH )? NAME COMMA )? NAME ;
 
-define : DEFINE SPACE+ NAME ;
+define : DEFINE WHITESPACE+ NAME ;
 
-undefine : UNDEFINE SPACE+ NAME ;
+undefine : UNDEFINE WHITESPACE+ NAME ;
 
-if_ : IF SPACE+ condition ;
+if_ : IF WHITESPACE+ condition ;
 
-elseif : ELSEIF SPACE+ condition ;
+elseif : ELSEIF WHITESPACE+ condition ;
 
-condition : ( NOT SPACE+ )? DEFINED LPAR NAME RPAR ;
+condition : ( NOT WHITESPACE+ )? DEFINED LPAR NAME RPAR ;
  
 else_ : ELSE ;
 
 endif : ENDIF ;
 
 eofDir : EOF_DIR ;
+
+space : SPACE ;
 
 eject : EJECT ;
 
