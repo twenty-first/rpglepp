@@ -2,7 +2,7 @@ rpglepp
 =======
 Preprocessor for the ILE RPG language
 -------------------------------------
-![build](https://github.com/twentyfirst-org/rpglepp/actions/workflows/build.yml/badge.svg)
+![build](https://github.com/twenty-first/rpglepp/actions/workflows/build.yml/badge.svg)
 
 `rpglepp` is a preprocessor for the [ILE RPG language](https://www.ibm.com/docs/en/i/7.5?topic=rpg-ile-reference),
 also known as RPG IV. It is written in Java with the help of the [ANTLR parser generator](https://www.antlr.org/).
