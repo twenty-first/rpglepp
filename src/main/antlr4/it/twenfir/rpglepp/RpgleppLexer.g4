@@ -26,9 +26,11 @@ PFX_LINE_NUMBER     : LNUM_F -> type(LINE_NUMBER) ;
 
 PFX_STANDARD_PREFIX : PREF_F -> type(STANDARD_PREFIX), pushMode(Fixed) ;
 
-PFX_BAD_PREFIX : BAD_PREF_F -> type(BAD_PREFIX), pushMode(Fixed) ;
+PFX_BAD_PREFIX  : BAD_PREF_F -> type(BAD_PREFIX), pushMode(Fixed) ;
 
-PFX_EOL         : PART_PREFIX_F? EOL_F -> type(EOL) ;
+PART_PREFIX     : ~[\r\n*] ~[\r\n*]? ANY_F? ANY_F? ;
+
+PFX_EOL         : EOL_F -> type(EOL) ;
 
 fragment PART_PREFIX_F : ~[\r\n*] ~[\r\n*]? ANY_F? ANY_F? ;
 
