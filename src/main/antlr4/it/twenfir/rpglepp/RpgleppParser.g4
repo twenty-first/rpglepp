@@ -6,6 +6,7 @@ sourceFile : ( FULLY_FREE_DIR? EOL+ )? line ( eol line? )* endSource? eof;
 
 line :	( prefix
         | prefix? statement
+        | PART_PREFIX
         )
         ;
 
@@ -72,7 +73,11 @@ comment     : ( COMMENT | BAD_COMMENT ) ;
 
 empty       : EMPTY ;
 
-sql         : EXEC_SQL eol? prefix? SQL_STATEMENT ( eol prefix? SQL_STATEMENT )* eol? prefix? END_EXEC ;
+sql   : ( EXEC_SQL
+        | SQL_STATEMENT
+        | END_EXEC
+        ) 
+        ;
 
 endSource   : END_SOURCE+ ;
 
