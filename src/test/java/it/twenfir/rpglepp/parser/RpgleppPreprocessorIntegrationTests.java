@@ -13,8 +13,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 
 import it.twenfir.rpglepp.api.SourceFile;
-import it.twenfir.rpglepp.parser.DefaultCopyBookReader;
-import it.twenfir.rpglepp.parser.RpgleppPreprocessor;
 
 public class RpgleppPreprocessorIntegrationTests {
 

@@ -8,7 +8,6 @@ import java.util.Arrays;
 import org.junit.jupiter.api.Test;
 
 import it.twenfir.rpglepp.api.SourceFile;
-import it.twenfir.rpglepp.parser.DefaultCopyBookReader;
 
 public class DefaultCopyBookReaderIntegrationTests {
     
