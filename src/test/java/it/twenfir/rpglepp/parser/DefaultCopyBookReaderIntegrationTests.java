@@ -1,4 +1,4 @@
-package io.github.twentyfirst.rpglepp.parser;
+package it.twenfir.rpglepp.parser;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -8,7 +8,6 @@ import java.util.Arrays;
 import org.junit.jupiter.api.Test;
 
 import it.twenfir.rpglepp.api.SourceFile;
-import it.twenfir.rpglepp.parser.DefaultCopyBookReader;
 
 public class DefaultCopyBookReaderIntegrationTests {
     

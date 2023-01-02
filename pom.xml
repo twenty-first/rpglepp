@@ -1,18 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns="http://maven.apache.org/POM/4.0.0"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <groupId>it.twenfir</groupId>
         <artifactId>twenfir-bom</artifactId>
-        <version>0.0.4</version>    
+        <version>0.0.5</version>    
     </parent>
 
     <groupId>it.twenfir</groupId>
     <artifactId>rpglepp</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.2-SNAPSHOT</version>
 
     <name>rpglepp</name>
     <description>An ANTLR4 preprocessor for ILE RPG</description>
@@ -53,7 +51,7 @@
         <dependency>
             <groupId>it.twenfir</groupId>
             <artifactId>twenfir-antlr</artifactId>
-            <version>0.0.3</version>
+            <version>0.0.6</version>
         </dependency>
          <dependency>
             <groupId>org.antlr</groupId>
@@ -130,6 +128,7 @@
         <connection>scm:git:git@github.com:twenty-first/rpglepp.git</connection>
         <developerConnection>scm:git:git@github.com:twenty-first/rpglepp.git</developerConnection>
         <url>https://github.com/twenty-first/rpglepp.git</url>
-    </scm>
+      <tag>HEAD</tag>
+  </scm>
 
 </project>

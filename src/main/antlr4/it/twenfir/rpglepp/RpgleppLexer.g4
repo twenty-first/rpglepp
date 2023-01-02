@@ -12,7 +12,7 @@ tokens {
     EXEC_SQL,
     INSTRUCTION,
     LINE_NUMBER,
-    SPACE,
+    WHITESPACE,
     SQL_STATEMENT,
     STANDARD_PREFIX
 }
@@ -26,9 +26,11 @@ PFX_LINE_NUMBER     : LNUM_F -> type(LINE_NUMBER) ;
 
 PFX_STANDARD_PREFIX : PREF_F -> type(STANDARD_PREFIX), pushMode(Fixed) ;
 
-PFX_BAD_PREFIX : BAD_PREF_F -> type(BAD_PREFIX), pushMode(Fixed) ;
+PFX_BAD_PREFIX  : BAD_PREF_F -> type(BAD_PREFIX), pushMode(Fixed) ;
 
-PFX_EOL         : PART_PREFIX_F? EOL_F -> type(EOL) ;
+PART_PREFIX     : ~[\r\n*] ~[\r\n*]? ANY_F? ANY_F? ;
+
+PFX_EOL         : EOL_F -> type(EOL) ;
 
 fragment PART_PREFIX_F : ~[\r\n*] ~[\r\n*]? ANY_F? ANY_F? ;
 
@@ -114,6 +116,7 @@ END_FREE    : [Ee][Nn][Dd]'-'[Ff][Rr][Ee][Ee] -> popMode ;
 IF          : [Ii][Ff] ;
 INCLUDE     : [Ii][Nn][Cc][Ll][Uu][Dd][Ee] ;
 NOT         : [Nn][Oo][Tt] ;
+SPACE       : [Ss][Pp][Aa][Cc][Ee] ;
 UNDEFINE    : [Uu][Nn][Dd][Ee][Ff][Ii][Nn][Ee] ;
 
 EXEC_SQL    : EXEC_SQL_F -> popMode, pushMode(SqlFree);
@@ -125,7 +128,7 @@ RPAR        : ')' ;
 SLASH       : '/' ;
 COMMA       : ',' ;
 
-DR_SPACE    : SPACE_F -> type(SPACE) ;
+DR_SPACE    : SPACE_F -> type(WHITESPACE) ;
 DR_EOL      : EOL_F -> type(EOL), popMode ;
 
 fragment NAME_START : [A-Za-z$#@*] ;

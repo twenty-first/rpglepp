@@ -1,4 +1,4 @@
-package io.github.twentyfirst.rpglepp.parser;
+package it.twenfir.rpglepp.parser;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -13,8 +13,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 
 import it.twenfir.rpglepp.api.SourceFile;
-import it.twenfir.rpglepp.parser.DefaultCopyBookReader;
-import it.twenfir.rpglepp.parser.RpgleppPreprocessor;
 
 public class RpgleppPreprocessorIntegrationTests {
 
@@ -107,5 +105,22 @@ public class RpgleppPreprocessorIntegrationTests {
 	    Set<String> defines = new HashSet<>();
 	    pp.preprocess(new SourceFile("DUMMY.RPGLE", source), defines);
 	    assertTrue(defines.isEmpty());
+	}
+
+	@Test
+	public void padPrefix() {
+		String source = "DF00   DCL-PROC proc;\n" +
+		"|\n" +
+		"|        DCL-F  F       EXTDESC('F')\n" +
+		"|                       EXTFILE(*EXTDESC)\n" +
+		"|                       QUALIFIED;\n" +
+		"|\n" +
+		"\n";
+		
+	    RpgleppPreprocessor pp = preprocessor(Collections.emptyList());
+	    String out = pp.preprocess(new SourceFile("DUMMY.RPGLE", source), null);
+		out.lines().forEachOrdered(l -> {
+			assertTrue(l.charAt(l.length() - 1) != '|');
+		});
 	}
 }
