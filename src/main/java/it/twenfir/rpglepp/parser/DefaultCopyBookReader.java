@@ -29,15 +29,19 @@ public class DefaultCopyBookReader implements CopyBookReader {
         if ( ! m.matches() || m.group(1) == null ) {
             throw new InvalidCopyBookException(copyBookName);
         }
+        String baseName = null;
         if ( m.group(1).contains(".") ) {
             try {
                 String text = Files.readFile(m.group(1), copyBookPath);
                 return new SourceFile(m.group(1), text);
             } catch (IOException e) {
-                throw new MissingCopyBookException(m.group(1));
+            	baseName = m.group(1).substring(0, m.group(1).indexOf('.'));
             }
         }
-        String baseName = m.group(1).toUpperCase();
+        else {
+            baseName = m.group(1);
+        }
+        baseName = baseName.toUpperCase();
         for ( String ext: COPY_EXTENSIONS ) {
             try {
                 String fileName = baseName + ext;
