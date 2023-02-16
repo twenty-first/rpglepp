@@ -52,8 +52,9 @@ public class RpgleppPreprocessorIntegrationTests {
         String source = "      /INCLUDE /usr/include/sqlda.sql\n";
         RpgleppPreprocessor pp = preprocessor(Arrays.asList("test/copy"));
         String out = pp.preprocess(new SourceFile("DUMMY.RPGLE", source), null);
-        assertTrue(!out.isEmpty() && out.charAt(1) == '-');
+        assertTrue(!out.isEmpty() && out.charAt(6) == '*');
     }
+    
 	@Test
 	public void commentPrefixedBySpec() {
 	    String source = "     C*\n";

@@ -1,1 +1,1 @@
--- An empty copy book
+      * An empty copy book
