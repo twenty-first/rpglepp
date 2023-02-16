@@ -15,7 +15,7 @@ public class DefaultCopyBookReader implements CopyBookReader {
 
 	private static String[] COPY_EXTENSIONS = new String[] { ".RPGLECOPY", ".RPGLE" };
 
-    private static Pattern NAME_PATTERN = Pattern.compile("(?:[A-Za-z/*]+,)?(\\w+)");
+    private static Pattern NAME_PATTERN = Pattern.compile("/?(?:[A-Za-z*]+(?:[,/]))*((?:\\w+)(?:\\.\\w+)?)");
 
     private List<String> copyBookPath;
 
@@ -28,6 +28,14 @@ public class DefaultCopyBookReader implements CopyBookReader {
         Matcher m = NAME_PATTERN.matcher(copyBookName);
         if ( ! m.matches() || m.group(1) == null ) {
             throw new InvalidCopyBookException(copyBookName);
+        }
+        if ( m.group(1).contains(".") ) {
+            try {
+                String text = Files.readFile(m.group(1), copyBookPath);
+                return new SourceFile(m.group(1), text);
+            } catch (IOException e) {
+                throw new MissingCopyBookException(m.group(1));
+            }
         }
         String baseName = m.group(1).toUpperCase();
         for ( String ext: COPY_EXTENSIONS ) {
