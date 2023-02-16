@@ -42,7 +42,9 @@ directive : ( copy
 copy		: ( COPY | INCLUDE ) WHITESPACE member WHITESPACE* ;
 
 //member      : ( ( NAME SLASH )? NAME COMMA )? NAME ;
-member      : ( SLASH? ( NAME SLASH )* NAME ( COMMA | SLASH ) )? NAME ( POINT NAME )?;
+member      : ( SLASH? ( member_name SLASH )* member_name ( COMMA | SLASH ) )? member_name ( POINT member_name )?;
+
+member_name : ( NAME | INCLUDE ) ;
 
 define : DEFINE WHITESPACE+ NAME ;
 
