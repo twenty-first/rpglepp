@@ -127,6 +127,7 @@ LPAR        : '(' ;
 RPAR        : ')' ;
 SLASH       : '/' ;
 COMMA       : ',' ;
+POINT       : '.' ;
 
 DR_SPACE    : SPACE_F -> type(WHITESPACE) ;
 DR_EOL      : EOL_F -> type(EOL), popMode ;

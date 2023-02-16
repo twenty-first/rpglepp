@@ -41,7 +41,8 @@ directive : ( copy
 
 copy		: ( COPY | INCLUDE ) WHITESPACE member WHITESPACE* ;
 
-member      : ( ( NAME SLASH )? NAME COMMA )? NAME ;
+//member      : ( ( NAME SLASH )? NAME COMMA )? NAME ;
+member      : ( SLASH? ( NAME SLASH )* NAME ( COMMA | SLASH ) )? NAME ( POINT NAME )?;
 
 define : DEFINE WHITESPACE+ NAME ;
 
