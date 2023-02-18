@@ -44,7 +44,7 @@ copy		: ( COPY | INCLUDE ) WHITESPACE member WHITESPACE* ;
 //member      : ( ( NAME SLASH )? NAME COMMA )? NAME ;
 member      : ( SLASH? ( member_name SLASH )* member_name ( COMMA | SLASH ) )? member_name ( POINT member_name )?;
 
-member_name : ( NAME | INCLUDE ) ;
+member_name : ( NAME | INCLUDE | COPY ) ;
 
 define : DEFINE WHITESPACE+ NAME ;
 
