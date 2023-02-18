@@ -15,7 +15,7 @@ public class DefaultCopyBookReader implements CopyBookReader {
 
 	private static String[] COPY_EXTENSIONS = new String[] { ".RPGLECOPY", ".RPGLE", ".SQLRPGLE" };
 
-    private static Pattern NAME_PATTERN = Pattern.compile("/?(?:[A-Za-z*]+(?:[,/]))*((?:\\w+)(?:\\.\\w+)?)");
+    private static Pattern NAME_PATTERN = Pattern.compile("/?(?:[A-Za-z*_]+(?:[,/]))*((?:\\w+)(?:\\.\\w+)?)");
 
     private List<String> copyBookPath;
 
