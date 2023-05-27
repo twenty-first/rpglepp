@@ -43,7 +43,10 @@ public class RpgleppPreprocessor {
     public String preprocess(SourceFile copyBook, Set<String> defines) {
 		CodePointCharStream inputStream = CharStreams.fromString(copyBook.getText(), copyBook.getName());
 		RpgleppLexer lexer = new RpgleppLexer(inputStream);
+		String previousFile = null;
 		if ( listener != null ) {
+			previousFile = listener.getFileName();
+			listener.setFileName(copyBook.getName().toLowerCase());
 			lexer.removeErrorListeners();
 			lexer.addErrorListener(listener);
 		}
@@ -58,6 +61,9 @@ public class RpgleppPreprocessor {
         RuleContext tree = parser.sourceFile();
         ParseTreeWalker walker = new ParseTreeWalker();
         walker.walk(rewriter, tree);
+		if ( listener != null ) {
+			listener.setFileName(previousFile);
+		}
         return rewriter.getText();
     }
 
