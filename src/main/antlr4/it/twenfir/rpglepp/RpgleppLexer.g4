@@ -40,7 +40,8 @@ fragment LNUM_F     : [0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-
 fragment PREF_F     : ANY_F ANY_F ANY_F ANY_F ANY_F ;
 fragment BAD_PREF_F : BAD_F BAD_F BAD_F BAD_F BAD_F ;
 fragment EOL_F      : '\r'? '\n' ;
-fragment ANY_F      : ~[\r\n\u0082\u00A3\u00A7\u00C2] ;
+//fragment ANY_F      : ~[\r\n\u00A3\u00A7\u00C2] ;
+fragment ANY_F      : ~[\r\n\u0082\u00C2] ;
 fragment BAD_F      : ~[\r\n] ;
 fragment SPACE_F    : [ \t] ;
 fragment SPEC_F		: [CcDdFfHhIiOoPp] ;
