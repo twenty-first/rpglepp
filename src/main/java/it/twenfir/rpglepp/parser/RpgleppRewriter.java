@@ -26,6 +26,7 @@ import it.twenfir.rpglepp.RpgleppParser.If_Context;
 import it.twenfir.rpglepp.RpgleppParser.InstructionContext;
 import it.twenfir.rpglepp.RpgleppParser.LineContext;
 import it.twenfir.rpglepp.RpgleppParser.PrefixContext;
+import it.twenfir.rpglepp.RpgleppParser.SqlCommentContext;
 import it.twenfir.rpglepp.RpgleppParser.UndefineContext;
 import it.twenfir.rpglepp.api.RpgleppErrorListener;
 import it.twenfir.rpglepp.api.SourceFile;
@@ -71,15 +72,6 @@ public class RpgleppRewriter extends RpgleppParserBaseListener {
     			listener.preprocessingWarning(ctx.getStart().getLine(), 
 				ctx.getStart().getCharPositionInLine(), 
 				"Invalid character in prefix");
-        		
-//    			listener.preprocessingError(ctx.getStart().getLine(), 
-//    					ctx.getStart().getCharPositionInLine(), 
-//    					"Invalid character in prefix");
-
-//        		String repl = StringUtils.replaceChars(ctx.BAD_PREFIX().getText(), 
-//    					"\u00A3\u00A7\u00C2", "LSA");
-//    					"\u00A3\u00A7\u00C2", "   ");
-//    			rewriter.replace(ctx.BAD_PREFIX().getSymbol(), repl);
         	}
         	if ( ctx.END_SOURCE_DIR() != null && ctx.END_SOURCE_DIR().getText().length() < 6 ) {
         		String repl = StringUtils.rightPad(ctx.END_SOURCE_DIR().getText(), 6);
@@ -95,16 +87,6 @@ public class RpgleppRewriter extends RpgleppParserBaseListener {
     			listener.preprocessingWarning(ctx.getStart().getLine(), 
 				ctx.getStart().getCharPositionInLine(), 
 				"Invalid character in instruction");
-
-//    			listener.preprocessingError(ctx.getStart().getLine(), 
-//    					ctx.getStart().getCharPositionInLine(), 
-//    					"Invalid character in instruction");
-
-//    			String repl = StringUtils.replaceChars(ctx.BAD_INSTRUCTION().getText(), 
-//    					"\u00A3\u00A7\u00C2", "LSA");
-//    			String repl = StringUtils.replaceChars(ctx.BAD_INSTRUCTION().getText(), 
-//    					"\u00A3\u00A7\u00C2", "   ");
-//    			rewriter.replace(ctx.BAD_INSTRUCTION().getSymbol(), repl);
     		}
     	}
 	}
@@ -117,37 +99,22 @@ public class RpgleppRewriter extends RpgleppParserBaseListener {
 				ctx.getStart().getCharPositionInLine(), 
 				"Invalid character in comment");
 
-//    			listener.preprocessingError(ctx.getStart().getLine(), 
-//    					ctx.getStart().getCharPositionInLine(), 
-//    					"Invalid character in comment");
-
-//    			String repl = StringUtils.replaceEach(ctx.BAD_COMMENT().getText(), 
-//    					new String[] { "\u00A3", "\u00A7" }, 
-//    					new String[] { "Pound", "Para" });
-
     			String repl = StringUtils.replaceEach(ctx.BAD_COMMENT().getText(), 
 				new String[] { "\u00C2\u0082" }, 
 				new String[] { " " });
-
-//    			String repl = StringUtils.replaceEach(ctx.BAD_COMMENT().getText(), 
-//				new String[] { "\u00C2\u0082" }, 
-//				new String[] { " " });
-
-//    			String repl = ctx.BAD_COMMENT().getText();    				
-//    			int i = repl.indexOf('*');
-//    			if ( i != -1 ) {
-//        			repl = " " + repl.substring(i);    				
-//    			}
-    			
-//    			repl = StringUtils.replaceChars(repl, "\u00A3\u00A7\u00C2", "   ");
-
-//    			String repl = StringUtils.replaceChars(ctx.BAD_COMMENT().getText(), "\u0082", " ");
 
     			rewriter.replace(ctx.BAD_COMMENT().getSymbol(), repl);
     		}
     	}
 	}
 
+	@Override
+	public void exitSqlComment(SqlCommentContext ctx) {
+    	if ( state == State.ACTIVE ) {
+    		rewriter.delete(ctx.SQL_COMMENT().getSymbol());
+    	}
+	}
+	
 	@Override
     public void exitCopy(CopyContext ctx) {
     	if ( state == State.ACTIVE ) {

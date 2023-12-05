@@ -143,6 +143,8 @@ SQX_END_EXEC : [Cc] '/' END_EXEC_F -> type(END_EXEC), popMode ;
 
 SQX_STATEMENT   : [Cc ] '+' ANY_F* -> type(SQL_STATEMENT) ;
 
+SQL_COMMENT : ( ANY_F '*' | SPACE_F* '//' ) ANY_F* ;
+
 SQX_EOL         : PART_PREFIX_F? EOL_F -> type(EOL), pushMode(SqlPrefix) ;
 
 

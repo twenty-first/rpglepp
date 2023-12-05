@@ -78,9 +78,12 @@ empty       : EMPTY ;
 
 sql   : ( EXEC_SQL
         | SQL_STATEMENT
+        | sqlComment
         | END_EXEC
         ) 
         ;
+
+sqlComment	: SQL_COMMENT ;
 
 endSource   : END_SOURCE+ ;
 
