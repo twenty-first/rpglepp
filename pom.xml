@@ -10,7 +10,7 @@
 
     <groupId>it.twenfir</groupId>
     <artifactId>rpglepp</artifactId>
-    <version>0.0.3-SNAPSHOT</version>
+    <version>0.0.3</version>
 
     <name>rpglepp</name>
     <description>An ANTLR4 preprocessor for ILE RPG</description>
@@ -128,7 +128,7 @@
         <connection>scm:git:git@github.com:twenty-first/rpglepp.git</connection>
         <developerConnection>scm:git:git@github.com:twenty-first/rpglepp.git</developerConnection>
         <url>https://github.com/twenty-first/rpglepp.git</url>
-      <tag>0.0</tag>
+      <tag>v0.0.3</tag>
   </scm>
 
 </project>
