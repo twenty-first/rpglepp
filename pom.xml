@@ -128,7 +128,7 @@
         <connection>scm:git:git@github.com:twenty-first/rpglepp.git</connection>
         <developerConnection>scm:git:git@github.com:twenty-first/rpglepp.git</developerConnection>
         <url>https://github.com/twenty-first/rpglepp.git</url>
-      <tag>HEAD</tag>
+      <tag>0.0</tag>
   </scm>
 
 </project>
