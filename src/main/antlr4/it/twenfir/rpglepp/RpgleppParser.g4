@@ -35,11 +35,12 @@ directive : ( copy
             | eject
             | free
             | end_free
+            | title
             )
-            ( WHITESPACE+ COMMENT? )?
+            ( WHITESPACE+ comment? )?
             ;
 
-copy		: ( COPY | INCLUDE ) WHITESPACE member WHITESPACE* ;
+copy		: ( COPY | INCLUDE ) WHITESPACE member ;
 
 //member      : ( ( NAME SLASH )? NAME COMMA )? NAME ;
 member      : ( SLASH? ( member_name SLASH )* member_name ( COMMA | SLASH ) )? member_name ( POINT member_name )?;
@@ -69,6 +70,8 @@ eject : EJECT ;
 free : FREE ;
 
 end_free : END_FREE ;
+
+title   : TITLE TEXT ;
 
 instruction : ( INSTRUCTION | BAD_INSTRUCTION );
 

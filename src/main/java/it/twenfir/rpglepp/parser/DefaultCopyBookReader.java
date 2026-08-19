@@ -32,8 +32,8 @@ public class DefaultCopyBookReader implements CopyBookReader {
         String baseName = null;
         if ( m.group(1).contains(".") ) {
             try {
-                String text = Files.readFile(m.group(1), copyBookPath);
-                return new SourceFile(m.group(1), text);
+                it.twenfir.antlr.api.SourceFile sf = Files.readFile(m.group(1), copyBookPath);
+                return new SourceFile(m.group(1), sf.getPath(), sf.getText());
             } catch (IOException e) {
             	baseName = m.group(1).substring(0, m.group(1).indexOf('.'));
             }
@@ -45,8 +45,8 @@ public class DefaultCopyBookReader implements CopyBookReader {
         for ( String ext: COPY_EXTENSIONS ) {
             try {
                 String fileName = baseName + ext;
-                String text = Files.readFile(fileName, copyBookPath);
-                return new SourceFile(fileName, text);
+                it.twenfir.antlr.api.SourceFile sf = Files.readFile(fileName, copyBookPath);
+                return new SourceFile(m.group(1), sf.getPath(), sf.getText());
             } catch (IOException e) {
             }
         }
