@@ -14,7 +14,8 @@ tokens {
     LINE_NUMBER,
     WHITESPACE,
     SQL_STATEMENT,
-    STANDARD_PREFIX
+    STANDARD_PREFIX,
+    TEXT
 }
 
 
@@ -51,7 +52,7 @@ fragment END_EXEC_F : [Ee][Nn][Dd]'-'[Ee][Xx][Ee][Cc] ;
 
 mode Fixed;
 
-FX_DIR_PREF : ANY_F '/' -> channel(HIDDEN), popMode, pushMode(Directive) ;
+FX_DIR_PREF : ( ANY_F | BAD_F ) SPACE_F* '/' -> channel(HIDDEN), popMode, pushMode(Directive) ;
 
 FX_EXEC_SQL : [Cc] '/' EXEC_SQL_F -> type(EXEC_SQL), popMode, pushMode(SqlFixed) ;
 
@@ -72,13 +73,13 @@ FX_FREE_PREF : SPACE_F SPACE_F -> channel(HIDDEN), popMode, pushMode(Free) ;
 
 mode Free;
 
-FR_DIR_PREF : SPACE_F* '/' -> channel(HIDDEN), popMode, pushMode(Directive) ;
+FR_DIR_PREF : SPACE_F* BAD_F? '/' -> channel(HIDDEN), popMode, pushMode(Directive) ;
 
 FR_COMMENT : SPACE_F* '//' ANY_F* -> type(COMMENT);
 
 FR_BAD_COMMENT : SPACE_F* '//' BAD_F+ -> type(BAD_COMMENT);
 
-FR_INSTRUCTION : SPACE_F* ~[/\r\n] ANY_F+ -> type(INSTRUCTION);
+FR_INSTRUCTION : SPACE_F* ( ~[/\r\n] ANY_F* | ';' ) -> type(INSTRUCTION);
 
 FR_BAD_INSTRUCTION : SPACE_F* ~[/\r\n] BAD_F+ -> type(BAD_INSTRUCTION);
 
@@ -118,11 +119,12 @@ IF          : [Ii][Ff] ;
 INCLUDE     : [Ii][Nn][Cc][Ll][Uu][Dd][Ee] ;
 NOT         : [Nn][Oo][Tt] ;
 SPACE       : [Ss][Pp][Aa][Cc][Ee] ;
+TITLE       : [Tt][Ii][Tt][Ll][Ee] -> pushMode(Title) ;
 UNDEFINE    : [Uu][Nn][Dd][Ee][Ff][Ii][Nn][Ee] ;
 
 EXEC_SQL    : EXEC_SQL_F -> popMode, pushMode(SqlFree);
 
-NAME        : NAME_START NAME_CONT* ;
+NAME        : ( NAME_START NAME_CONT* | '*' NAME_CONT+ ) ;
 
 LPAR        : '(' ;
 RPAR        : ')' ;
@@ -131,10 +133,16 @@ COMMA       : ',' ;
 POINT       : '.' ;
 
 DR_SPACE    : SPACE_F -> type(WHITESPACE) ;
+DR_COMMENT  : '*' ANY_F* -> type(COMMENT) ;
 DR_EOL      : EOL_F -> type(EOL), popMode ;
 
-fragment NAME_START : [A-Za-z$#@*] ;
+fragment NAME_START : [A-Za-z$#@] ;
 fragment NAME_CONT  : [A-Za-z0-9_$#@] ;
+
+
+mode Title;
+
+TT_TEXT     : ANY_F+ -> type(TEXT), popMode ;
 
 
 mode SqlFixed;
