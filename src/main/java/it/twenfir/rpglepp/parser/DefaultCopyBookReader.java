@@ -33,8 +33,7 @@ public class DefaultCopyBookReader implements CopyBookReader {
         if ( m.group(1).contains(".") ) {
             try {
                 it.twenfir.antlr.api.SourceFile sf = Files.readFile(m.group(1), copyBookPath);
-                String text = sf.getText();
-                return new SourceFile(m.group(1), text);
+                return new SourceFile(m.group(1), sf.getPath(), sf.getText());
             } catch (IOException e) {
             	baseName = m.group(1).substring(0, m.group(1).indexOf('.'));
             }
@@ -47,8 +46,7 @@ public class DefaultCopyBookReader implements CopyBookReader {
             try {
                 String fileName = baseName + ext;
                 it.twenfir.antlr.api.SourceFile sf = Files.readFile(fileName, copyBookPath);
-                String text = sf.getText();
-                return new SourceFile(fileName, text);
+                return new SourceFile(m.group(1), sf.getPath(), sf.getText());
             } catch (IOException e) {
             }
         }
