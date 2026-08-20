@@ -120,7 +120,7 @@ public class RpgleppRewriter extends RpgleppParserBaseListener {
     	if ( state == State.ACTIVE ) {
             RpgleppPreprocessor pp = preprocessor.make();
             SourceFile copyBook = pp.getReader().read(ctx.member().getText());
-            copyText = pp.preprocess(copyBook, defines);
+            copyText = pp.preprocess(copyBook.getName(), copyBook.getText(), defines);
     	}
     }
 
