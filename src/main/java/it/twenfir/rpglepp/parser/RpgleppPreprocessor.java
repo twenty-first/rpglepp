@@ -27,10 +27,6 @@ public class RpgleppPreprocessor {
         this(reader, null);
     }
 
-    public RpgleppPreprocessor(List<String> copyPath) {
-        this(copyPath, null);
-    }
-
     public RpgleppPreprocessor(List<String> copyPath, RpgleppErrorListener listener) {
         this(new DefaultCopyBookReader(copyPath), listener);
     }
@@ -40,13 +36,13 @@ public class RpgleppPreprocessor {
         this.reader = reader;
     }
     
-    public String preprocess(SourceFile copyBook, Set<String> defines) {
-		CodePointCharStream inputStream = CharStreams.fromString(copyBook.getText(), copyBook.getName());
+    public String preprocess(String name, String text, Set<String> defines) {
+		CodePointCharStream inputStream = CharStreams.fromString(text, name);
 		RpgleppLexer lexer = new RpgleppLexer(inputStream);
 		String previousFile = null;
 		if ( listener != null ) {
 			previousFile = listener.getFileName();
-			listener.setFileName(copyBook.getName().toLowerCase());
+			listener.setFileName(name.toLowerCase());
 			lexer.removeErrorListeners();
 			lexer.addErrorListener(listener);
 		}

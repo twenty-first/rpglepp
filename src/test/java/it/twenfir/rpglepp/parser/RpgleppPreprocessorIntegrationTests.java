@@ -12,8 +12,6 @@ import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 
-import it.twenfir.rpglepp.api.SourceFile;
-
 public class RpgleppPreprocessorIntegrationTests {
 
 	RpgleppPreprocessor preprocessor(List<String> copyPath) {
@@ -35,7 +33,7 @@ public class RpgleppPreprocessorIntegrationTests {
     public void bootsrap() {
         String source = "      *\n";
         RpgleppPreprocessor pp = preprocessor(Collections.emptyList());
-        String out = pp.preprocess(new SourceFile("DUMMY.RPGLE", source, source), null);
+        String out = pp.preprocess("DUMMY.RPGLE", source, null);
         assertEquals(pad(source), out);
     }
 
@@ -43,7 +41,7 @@ public class RpgleppPreprocessorIntegrationTests {
     public void simpleCopy() {
         String source = "      /COPY LIBRARY/FILE,COPYBOOK\n";
         RpgleppPreprocessor pp = preprocessor(Arrays.asList("test/copy"));
-        String out = pp.preprocess(new SourceFile("DUMMY.RPGLE", source, source), null);
+        String out = pp.preprocess("DUMMY.RPGLE", source, null);
         assertTrue(!out.isEmpty() && out.charAt(6) == '*');
     }
 
@@ -51,7 +49,7 @@ public class RpgleppPreprocessorIntegrationTests {
     public void simpleInclude() {
         String source = "      /INCLUDE /usr/include/sqlda.sql\n";
         RpgleppPreprocessor pp = preprocessor(Arrays.asList("test/copy"));
-        String out = pp.preprocess(new SourceFile("DUMMY.RPGLE", source, source), null);
+        String out = pp.preprocess("DUMMY.RPGLE", source, null);
         assertTrue(!out.isEmpty() && out.charAt(6) == '*');
     }
     
@@ -59,7 +57,7 @@ public class RpgleppPreprocessorIntegrationTests {
 	public void commentPrefixedBySpec() {
 	    String source = "     C*\n";
 	    RpgleppPreprocessor pp = preprocessor(Collections.emptyList());
-	    String out = pp.preprocess(new SourceFile("DUMMY.RPGLE", source, source), null);
+	    String out = pp.preprocess("DUMMY.RPGLE", source, null);
 	    assertEquals(pad(source), out);
 	}
 
@@ -67,7 +65,7 @@ public class RpgleppPreprocessorIntegrationTests {
 	public void windowsLineEndings() {
 	    String source = "      *\r\n";
 	    RpgleppPreprocessor pp = preprocessor(Collections.emptyList());
-	    String out = pp.preprocess(new SourceFile("DUMMY.RPGLE", source, source), null);
+	    String out = pp.preprocess("DUMMY.RPGLE", source, null);
 	    assertEquals(pad(source), out);
 	}
 
@@ -75,7 +73,7 @@ public class RpgleppPreprocessorIntegrationTests {
 	public void correctLineLength() {
 	    String source = "000600050331     djNHField         c                   CONST(1)\n";
 	    RpgleppPreprocessor pp = preprocessor(Collections.emptyList());
-	    String out = pp.preprocess(new SourceFile("DUMMY.RPGLE", source, source), null);
+	    String out = pp.preprocess("DUMMY.RPGLE", source, null);
 	    assertEquals(pad(source), out);
 	}
 
@@ -83,7 +81,7 @@ public class RpgleppPreprocessorIntegrationTests {
 	public void emptyLineWithNumber() {
 	    String source = "000600050331\n";
 	    RpgleppPreprocessor pp = preprocessor(Collections.emptyList());
-	    String out = pp.preprocess(new SourceFile("DUMMY.RPGLE", source, source), null);
+	    String out = pp.preprocess("DUMMY.RPGLE", source, null);
 	    assertEquals(pad(source), out);
 	}
 
@@ -92,7 +90,7 @@ public class RpgleppPreprocessorIntegrationTests {
 	    String source = "      /DEFINE NAME\n";
 	    RpgleppPreprocessor pp = preprocessor(Collections.emptyList());
 	    Set<String> defines = new HashSet<>();
-	    pp.preprocess(new SourceFile("DUMMY.RPGLE", source, source), defines);
+	    pp.preprocess("DUMMY.RPGLE", source, defines);
 	    assertTrue(defines.contains("NAME"));
 	}
 
@@ -102,7 +100,7 @@ public class RpgleppPreprocessorIntegrationTests {
 	    RpgleppPreprocessor pp = preprocessor(Collections.emptyList());
 	    Set<String> defines = new HashSet<>();
 	    defines.add("NAME");
-	    pp.preprocess(new SourceFile("DUMMY.RPGLE", source, source), defines);
+	    pp.preprocess("DUMMY.RPGLE", source, defines);
 	    assertTrue(defines.isEmpty());
 	}
 
@@ -111,7 +109,7 @@ public class RpgleppPreprocessorIntegrationTests {
 	    String source = "      /DEFINE NAME\n      /UNDEFINE NAME\n";
 	    RpgleppPreprocessor pp = preprocessor(Collections.emptyList());
 	    Set<String> defines = new HashSet<>();
-	    pp.preprocess(new SourceFile("DUMMY.RPGLE", source, source), defines);
+	    pp.preprocess("DUMMY.RPGLE", source, defines);
 	    assertTrue(defines.isEmpty());
 	}
 
@@ -126,7 +124,7 @@ public class RpgleppPreprocessorIntegrationTests {
 		"\n";
 		
 	    RpgleppPreprocessor pp = preprocessor(Collections.emptyList());
-	    String out = pp.preprocess(new SourceFile("DUMMY.RPGLE", source, source), null);
+	    String out = pp.preprocess("DUMMY.RPGLE", source, null);
 		out.lines().forEachOrdered(l -> {
 			assertTrue(l.charAt(l.length() - 1) != '|');
 		});
